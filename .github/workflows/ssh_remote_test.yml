@@ -17,4 +17,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            whoami
+             cd ~/deploy_project/backend/public/
+             ls
