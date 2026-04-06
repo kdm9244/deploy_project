@@ -40,18 +40,18 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-    - name : test directory info
-      run : |
-        ls
-        cd frontapp/dist/
-        ls
-        
     # 서버에 접속하여 배포 실행          
     - name: SSH into server and deploy
-      run: |       
+      run: |
+        scp   -r -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} frontapp/dist/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/${{ secrets.SSH_USER }}/deploy_project/backend/public/
         ssh -vvv -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }}  ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd ~/deploy_project/backend/public/
-            ls
+            cd ~/deploy_project
+            git pull origin main
+            cd backend
+            npm ci
+            pm2 restart app || pm2 start app.js --name "app"
+            pm2 save
           EOF
 
         echo '== build end ==='
+        
