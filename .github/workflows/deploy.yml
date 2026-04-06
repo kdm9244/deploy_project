@@ -45,14 +45,13 @@ jobs:
         ls
         cd frontapp/dist/
         ls
-
-    - name : NCP info
-      run : |
-       ssh -vvv -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }}  ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+        
+    # 서버에 접속하여 배포 실행          
+    - name: SSH into server and deploy
+      run: |       
+        ssh -vvv -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }}  ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd ~/deploy_project/backend/public/
             ls
           EOF
 
         echo '== build end ==='
-
-        
